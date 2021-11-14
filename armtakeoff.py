@@ -1,7 +1,7 @@
-
 from __future__ import print_function
 import time
 from dronekit import connect, VehicleMode, LocationGlobalRelative
+
 
 # Set up option parsing to get connection string
 import argparse
@@ -10,7 +10,7 @@ parser.add_argument('--connect',
                     help="Vehicle connection target string. If not specified, SITL automatically started and used.")
 args = parser.parse_args()
 
-connection_string = args.connect
+connection_string = "tcp:127.0.0.1:5762"
 sitl = None
 
 
@@ -62,7 +62,7 @@ def arm_and_takeoff(aTargetAltitude):
         time.sleep(1)
 
 
-arm_and_takeoff(500)
+arm_and_takeoff(10)
 
 print("Set default/target airspeed to 3")
 vehicle.airspeed = 3
