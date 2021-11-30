@@ -185,122 +185,139 @@ def condition_yaw(heading, relative=False):
 
 arm_and_takeoff(5)
 
-DURATION = 20
-# Set up velocity vector to map to each direction.
-# vx > 0 => fly North
-# vx < 0 => fly South
-NORTH = 2
-SOUTH = -2
+# DURATION = 20
+# # Set up velocity vector to map to each direction.
+# # vx > 0 => fly North
+# # vx < 0 => fly South
+# NORTH = 2
+# SOUTH = -2
 
-# Note for vy:
-# vy > 0 => fly East
-# vy < 0 => fly West
-EAST = 2
-WEST = -2
+# # Note for vy:
+# # vy > 0 => fly East
+# # vy < 0 => fly West
+# EAST = 2
+# WEST = -2
 
-# Note for vz:
-# vz < 0 => ascend
-# vz > 0 => descend
-UP = -0.5
-DOWN = 0.5
-
-
-# Square path using velocity
-print("SQUARE path using SET_POSITION_TARGET_LOCAL_NED and velocity parameters")
-
-print("Yaw 180 absolute (South)")
-condition_yaw(180)
-
-print("Velocity South & up")
-send_ned_velocity(SOUTH, 0, UP, DURATION)
-send_ned_velocity(0, 0, 0, 1)
+# # Note for vz:
+# # vz < 0 => ascend
+# # vz > 0 => descend
+# UP = -0.5
+# DOWN = 0.5
 
 
-print("Yaw 270 absolute (West)")
-condition_yaw(270)
+# # Square path using velocity
+# print("SQUARE path using SET_POSITION_TARGET_LOCAL_NED and velocity parameters")
 
-print("Velocity West & down")
-send_ned_velocity(0, WEST, DOWN, DURATION)
-send_ned_velocity(0, 0, 0, 1)
+# print("Yaw 180 absolute (South)")
+# condition_yaw(180)
 
-
-print("Yaw 0 absolute (North)")
-condition_yaw(0)
-
-print("Velocity North")
-send_ned_velocity(NORTH, 0, 0, DURATION)
-send_ned_velocity(0, 0, 0, 1)
+# print("Velocity South & up")
+# send_ned_velocity(SOUTH, 0, UP, DURATION)
+# send_ned_velocity(0, 0, 0, 1)
 
 
-print("Yaw 90 absolute (East)")
-condition_yaw(90)
+# print("Yaw 270 absolute (West)")
+# condition_yaw(270)
 
-print("Velocity East")
-send_ned_velocity(0, EAST, 0, DURATION)
-send_ned_velocity(0, 0, 0, 1)
-
-
-"""
-Fly the vehicle in a DIAMOND path using velocity vectors (the underlying code calls the 
-SET_POSITION_TARGET_GLOBAL_INT command with the velocity parameters enabled).
-The thread sleeps for a time (DURATION) which defines the distance that will be travelled.
-The code sets the yaw (MAV_CMD_CONDITION_YAW) using the `set_yaw()` method using relative headings
-so that the front of the vehicle points in the direction of travel.
-At the end of the second segment the code sets a new home location to the current point.
-"""
-
-print("DIAMOND path using SET_POSITION_TARGET_GLOBAL_INT and velocity parameters")
-# vx, vy are parallel to North and East (independent of the vehicle orientation)
-
-print("Yaw 225 absolute")
-condition_yaw(225)
-
-print("Velocity South, West and Up")
-send_global_velocity(SOUTH, WEST, UP, DURATION)
-send_global_velocity(0, 0, 0, 1)
+# print("Velocity West & down")
+# send_ned_velocity(0, WEST, DOWN, DURATION)
+# send_ned_velocity(0, 0, 0, 1)
 
 
-print("Yaw 90 relative (to previous yaw heading)")
-condition_yaw(90, relative=True)
+# print("Yaw 0 absolute (North)")
+# condition_yaw(0)
 
-print("Velocity North, West and Down")
-send_global_velocity(NORTH, WEST, DOWN, DURATION)
-send_global_velocity(0, 0, 0, 1)
-
-print("Set new home location to current location")
-vehicle.home_location = vehicle.location.global_frame
-print("Get new home location")
-# This reloads the home location in DroneKit and GCSs
-cmds = vehicle.commands
-cmds.download()
-cmds.wait_ready()
-print(" Home Location: %s" % vehicle.home_location)
+# print("Velocity North")
+# send_ned_velocity(NORTH, 0, 0, DURATION)
+# send_ned_velocity(0, 0, 0, 1)
 
 
-print("Yaw 90 relative (to previous yaw heading)")
-condition_yaw(90, relative=True)
+# print("Yaw 90 absolute (East)")
+# condition_yaw(90)
 
-print("Velocity North and East")
-send_global_velocity(NORTH, EAST, 0, DURATION)
-send_global_velocity(0, 0, 0, 1)
-
-
-print("Yaw 90 relative (to previous yaw heading)")
-condition_yaw(90, relative=True)
-
-print("Velocity South and East")
-send_global_velocity(SOUTH, EAST, 0, DURATION)
-send_global_velocity(0, 0, 0, 1)
+# print("Velocity East")
+# send_ned_velocity(0, EAST, 0, DURATION)
+# send_ned_velocity(0, 0, 0, 1)
 
 
-"""
-The example is completing. LAND at current location.
-"""
 
-print("Setting LAND mode...")
-vehicle.mode = VehicleMode("LAND")
+# print("Yaw 225 absolute")
+# condition_yaw(225)
+
+# print("Velocity South, West and Up")
+# send_global_velocity(SOUTH, WEST, UP, DURATION)
+# send_global_velocity(0, 0, 0, 1)
 
 
+# print("Yaw 90 relative (to previous yaw heading)")
+# condition_yaw(90, relative=True)
+
+# print("Velocity North, West and Down")
+# send_global_velocity(NORTH, WEST, DOWN, DURATION)
+# send_global_velocity(0, 0, 0, 1)
+
+# print("Set new home location to current location")
+# vehicle.home_location = vehicle.location.global_frame
+# print("Get new home location")
+# # This reloads the home location in DroneKit and GCSs
+# cmds = vehicle.commands
+# cmds.download()
+# cmds.wait_ready()
+# print(" Home Location: %s" % vehicle.home_location)
+
+
+# print("Yaw 90 relative (to previous yaw heading)")
+# condition_yaw(90, relative=True)
+
+# print("Velocity North and East")
+# send_global_velocity(NORTH, EAST, 0, DURATION)
+# send_global_velocity(0, 0, 0, 1)
+
+
+# print("Yaw 90 relative (to previous yaw heading)")
+# condition_yaw(90, relative=True)
+
+# print("Velocity South and East")
+# send_global_velocity(SOUTH, EAST, 0, DURATION)
+# send_global_velocity(0, 0, 0, 1)
+
+
+# """
+# The example is completing. LAND at current location.
+# """
+
+# print("Setting LAND mode...")
+# vehicle.mode = VehicleMode("LAND")
+
+def set_velocity_body(vehicle, vx, vy, vz,duration):
+    """ Remember: vz is positive downward!!!
+    http://ardupilot.org/dev/docs/copter-commands-in-guided-mode.html
+    
+    Bitmask to indicate which dimensions should be ignored by the vehicle 
+    (a value of 0b0000000000000000 or 0b0000001000000000 indicates that 
+    none of the setpoint dimensions should be ignored). Mapping: 
+    bit 1: x,  bit 2: y,  bit 3: z, 
+    bit 4: vx, bit 5: vy, bit 6: vz, 
+    bit 7: ax, bit 8: ay, bit 9:
+    
+    
+    """
+    msg = vehicle.message_factory.set_position_target_local_ned_encode(
+            0,
+            0, 0,
+            mavutil.mavlink.MAV_FRAME_BODY_NED,
+            0b0000111111000111, #-- BITMASK -> Consider only the velocities
+            0, 0, 0,        #-- POSITION
+            vx, vy, vz,     #-- VELOCITY
+            0, 0, 0,        #-- ACCELERATIONS
+            0, 0)
+    for x in range(0, duration):
+        vehicle.send_mavlink(msg)
+        time.sleep(1)
+    vehicle.flush()
+
+set_velocity_body(vehicle, 10, 0, 0,100)
 # Close vehicle object before exiting script
 print("Close vehicle object")
 vehicle.close()
+
