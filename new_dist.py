@@ -19,15 +19,17 @@ faceSizes = [1026, 684, 456, 304, 202, 136, 90]
 acc = [500, 250, 250, 150, 110, 70, 50]
 dimensions = (960, 720)
 UDOffset = 150
-
+szX = 100
+szY = 55
 detector = cv2.CascadeClassifier("haarcascade_frontalface_alt2.xml")
+recognizer = cv2.face.LBPHFaceRecognizer_create()
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, 960)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 cap.set(cv2.CAP_PROP_FPS, FPS)
 
 while True:
 
-    #time.sleep(1 / FPS)
+    # time.sleep(1 / FPS)
 
     k = cv2.waitKey(20)
     if k == ord("t"):
@@ -45,6 +47,8 @@ while True:
             print("OVERRIDE DISABLED")
     if k == 27:
         break
+
+    
     if OVERRIDE:
         # S & W to fly forward & back
         if k == ord("w"):
@@ -77,15 +81,15 @@ while True:
             left_right_velocity = -int(S * oSpeed)
         else:
             left_right_velocity = 0
+
+
+
     ok, image = cap.read()
     image = imutils.resize(image, width=920, height=720)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     rects = detector.detectMultiScale(
         gray,
         scaleFactor=1.5,
-        minNeighbors=2,
-        minSize=(30, 30),
-        flags=cv2.CASCADE_SCALE_IMAGE,
     )
     tSize = faceSizes[tDistance]
     cWidth = int(dimensions[0] / 2)
@@ -93,8 +97,35 @@ while True:
     cv2.circle(image, (cWidth, cHeight), 10, (0, 0, 255), 2)
     # loop over the faces and draw a rectangle surrounding each
     for (x, y, w, h) in rects:
-
-        cv2.rectangle(image, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        end_cord_x = x + w
+        end_cord_y = y + h
+        end_size = w * 2
+        fbCol = (255, 0, 0)
+        fbStroke = 2
+        # these are our target coordinates
+        targ_cord_x = int((end_cord_x + x) / 2)
+        targ_cord_y = int((end_cord_y + y) / 2) + UDOffset
+        vTrue = np.array((cWidth, cHeight, tSize))
+        vTarget = np.array((targ_cord_x, targ_cord_y, end_size))
+        vDistance = vTrue - vTarget
+        cv2.rectangle(image, (x, y), (x + w, y + h), fbCol, 2)
+        cv2.rectangle(
+            image,
+            (targ_cord_x - szX, targ_cord_y - szY),
+            (targ_cord_x + szX, targ_cord_y + szY),
+            (0, 255, 0),
+            fbStroke,
+        )
+        cv2.circle(image, (targ_cord_x, targ_cord_y), 10, (0, 255, 0), 2)
+        cv2.putText(
+            image,
+            str(vDistance),
+            (0, 64),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            1,
+            (255, 255, 255),
+            2,
+        )
     cv2.imshow("Faces", image)
 
 cap.release()
