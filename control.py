@@ -230,20 +230,21 @@ def send_movement_command_XYZ(velocity_x, velocity_y, velocity_z):
         0, 0)    
 
     vehicle.send_mavlink(msg)
+    vehicle.flush()
 
-connect_drone("tcp:127.0.0.1:5762")
-configure_PID("PID")
-arm_and_takeoff(10)
-for i in range(10):
-    movementRollAngle = (pidRoll(100) * -1)
+# connect_drone("tcp:127.0.0.1:5762")
+# configure_PID("PID")
+# arm_and_takeoff(10)
+# for i in range(20):
+#     movementRollAngle = (pidRoll(100) * -1)
     
-    send_movement_command_XYZ(4,0,-1)
-    print(movementRollAngle)
-    print(" Velocity: %s" % vehicle.velocity)
-    print(" Groundspeed: %s" % vehicle.groundspeed)    # settable
-    print(" Airspeed: %s" % vehicle.airspeed)
-    print(" Attitude: %s" % vehicle.attitude)
-    time.sleep(1)
-send_movement_command_YAW(pidYaw(15) * -1)
-time.sleep(3)
-land()
+#     send_movement_command_XYZ(0,10,0)
+#     print(movementRollAngle)
+#     print(" Velocity: %s" % vehicle.velocity)
+#     print(" Groundspeed: %s" % vehicle.groundspeed)    # settable
+#     print(" Airspeed: %s" % vehicle.airspeed)
+#     print(" Attitude: %s" % vehicle.attitude)
+#     time.sleep(1)
+# send_movement_command_YAW(pidYaw(15) * -1)
+# time.sleep(3)
+# land()
